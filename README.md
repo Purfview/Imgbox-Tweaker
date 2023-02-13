@@ -9,7 +9,7 @@ Auto-load into 'edit' page to get Copy buttons.
 Links centering option.   
 Supports mobile: [Firefox Nightly](https://play.google.com/store/apps/details?id=org.mozilla.fenix) for Android.   
 Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon, Edge.    
-Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases). 
+Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://web.archive.org/web/20171009185612/https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/versions/) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases). 
 
 ## Installing:
 
