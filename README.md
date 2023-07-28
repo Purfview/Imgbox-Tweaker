@@ -13,4 +13,4 @@ Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](http
 
 ## Installing:
 
-[Press here to install](https://greasyfork.org/scripts/454582-imgbox-tweaker/code/Imgbox%20Tweaker.user.js)
+[Press here to install](https://greasyfork.org/scripts/454582-imgbox-tweaker)
