@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         Imgbox Tweaker
-// @version      2.0
+// @version      2.1
 // @namespace    https://github.com/Purfview/Imgbox-Tweaker
 // @description  Adds custom formatted links, working Copy to clipboard buttons, menu pre-select for 1-click uploading, links centering.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAKlBMVEUAAQH9cgMYEAs2Hg1VLRB6PhCdTRG+WQrTZRSyWhrfZwbnbQ/ucxb+eRkNjKAWAAADwElEQVRIx72TSY8SQRTHn90NqLcn0ECrSdm0GOXS0IhLPLTCjFtMugUxGk3AGYjLBVwYozFR1IneHHG9ycHowYtrYryo0cSr28VP46sqG3GcmZPxl3R3Vde/6i31HvxnlLFytzxWZfOtjw9QkKjMvf0gDnkx13oDhyyfefi3ma34m1gEJ2evr8G7mFjfOju9b2qqa/rJ0iw/1EGMjqgLW+lWB1OeZf9pYIWJxOOJ4qNzIhYXnNF17XMvjILrKPFAc0cEuRSoTadQ3r3CvoSEsFYaCRF7yl4xqsIGsT5p07H2bxdXuuuSwYkNHqf4W4eA1XH1KRqtKXFK5ixO870MXg4tXGovRY7RZHxaZqZZ7LqwNUhnCD0/dRSJJAjCPzq4Ig+RwEZYh6QNRX6P0qVPGcQPCqjLgiCj6hH6rCXFGWY51iC25GqVWQAJkPg3yDADZYbHv5tbusVdASgHWfBAOcFz9w51x0JceRO2TwrnXOljkoE6/ibFwCpToJuulyCDCV54kQdCsHQ54ybIyBBT2dinqXZRzLK6tCTeTalgist/HZGCOB+bYyp9VTEuFb3TYs9zGWWMj48bHf2XQEVE+hLy7T+jl70E8Ts5rIs/iD3gLrWEoNMmm/vZ+n02JTUpG2gfExXVDQSqvpqujgSLDVmWZlpkaSoQRFB/At1bDLIkcGytFtLDVROgJitkGW+KpIaDj5AjQaFgWzXjddMDOCcFUcghxhal7rfMDjeRvYstNJ64wWX4MViMqGfr6ngBKavK4CDWZG3kZU/E6RR9vLntfiXM41fOb8aJAV6mpSvDVKsuPH29F3wUmdSO2TtLfNCTXSPrYowBzMR8Vx4rKkT15KjjBne4OhrBm78F4boc7uiLT3qaiuHaR1HxkiztlDYUvqOITK7l4vTmvXk0OGwmL/7gw6oNKtuKwvnFnvoNJGyt6/Besqhx7xx9u6MCRCEDkYvD1rInSLAewClsM7kUKtB04DCDIa+AHNRkh1N4J0vK5YpCloY0bFKvivPcKtsUtwmL+94Sb0SQW2ZR2F+1WEZt++oXgMMbvQMwQhjTdD4LvT3sxPa4Lii3m9oNGMWPpoVLO/N9iwbrltuH4A8i6EyMTC8cWfoV/qSB6ELolJyse6+ttGcJQoht2MKzvQ1Wo9vpwWw2Ypuek6DpsDW5S4e/2fIeVmHcisShkcD6HALFhnVonN0Vh3u1PszNGkSDBKYJ8xBGxEEU5l2HEBcsg/lRyUTjBizAAI37bCGBj0YeFiKHy2FBtOlJ+Nf8BCbnsb61BX21AAAAAElFTkSuQmCC
@@ -36,6 +36,8 @@
 //==============================================================================
 //                         Version History:
 //==============================================================================
+
+2.1     -    New feature: Works when logged in.
 
 2.0     -    Major script rewrite.
              Namespace change.
@@ -156,6 +158,13 @@ function preselectMenus(mutation, observer) {
   $('.dropdown-menu.inner.selectpicker:eq(2)').find('li').removeAttr('class');
   $('.dropdown-menu.inner.selectpicker:eq(2)').find('li:eq('+comment_index+')').addClass("selected");
 
+
+  // Check if logged in [Gallery preselect is not supported there]
+  if ($('.icon-comments').length) {
+    console.log("Imgbox Tweaker: Login detected. Skiping 'Gallery preselect'.");
+    return;
+  }
+
   // Gallery preselect
   let gallery_index;
   const gallery_val = GM_config.get('menu_gallery');
@@ -182,8 +191,15 @@ function startImboxTweaker() {
 
   // Upload result page
   if ($('#codes-full').length === 1) {
+
+    // Check if logged in [there is no Edit page and no Copy butons]
+    let not_login = true;
+    if ($('.icon-comments').length) {
+      not_login = false;
+    }
+
     // Go to "upload edit" page to see Copy buttons
-    if (!Boolean(location.href.match('\\/edit\\/'))) {
+    if (!Boolean(location.href.match('\\/edit\\/')) && not_login) {
       console.log("Imgbox Tweaker: Restarting into 'upload edit' page.");
       const edithref = $('div.text-right a').text();
       window.location.replace(edithref +'?#');
@@ -258,7 +274,7 @@ function startImboxTweaker() {
 
     // Fix Copy to clipboard buttons
     let buttons = $('.clipboard-button');
-    if (buttons.length > 2) {
+    if (buttons.length > 2 && not_login) {
       buttons.each(function() {
         const elem = $(this);
         let collect_id, collect_txt;
